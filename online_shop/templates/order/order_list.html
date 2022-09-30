@@ -1,0 +1,460 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/dashboard_style.css' %}">
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+<script src="./static/js/library/jquery.min.js"></script>
+<style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: grey;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    /* Add padding to containers */
+    .container {
+      padding: 16px;
+      width: 100%;
+
+    }
+
+    /* Full-width input fields */
+    input[type=text], input[type=number], select {
+      width: 100%;
+      padding: 15px;
+      margin: 5px 0 22px 0;
+      display: inline-block;
+      border: none;
+      background: #f1f1f1;
+    }
+
+    input[type=text]:focus, input[type=number]:focus, select:focus {
+      background-color: #ddd;
+      outline: none;
+    }
+
+    /* Overwrite default styles of hr */
+    hr {
+      border: 1px solid #f1f1f1;
+      margin-bottom: 25px;
+    }
+
+    /* Set a style for the submit button */
+    .registerbtn {
+      background-color: #04AA6D;
+      color: white;
+      padding: 16px 20px;
+      margin: 8px 0;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      opacity: 0.9;
+    }
+
+    .registerbtn:hover {
+      opacity: 1;
+    }
+
+    /* Add a blue text color to links */
+    a {
+      color: dodgerblue;
+    }
+
+    /* Set a grey background color and center the text of the "sign in" section */
+    .signin {
+      background-color: #f1f1f1;
+      text-align: center;
+    }
+
+    .errorlist {
+        background: red;
+    }
+
+    .success_msg {
+        color: white;
+        background: green;
+        height: 30px;
+        padding: 5px;
+    }
+
+    .td_class {
+        font-weight: normal;
+        padding: 20px !important;
+    }
+
+
+</style>
+
+<div class="main-body" id="order_box_con">
+     <div style="background-color: whitesmoke; height: 100%;">
+        <nav class="navbar bg-inverse fixed-top bg-faded">
+            <div class="row">
+                <h3>
+                    <span style="font-size: 15; color: white;">Order List</span>
+                </h3>
+
+            </div>
+        </nav>
+
+         <div class="single-table">
+            <div class="table-responsive" style="overflow: hidden !important;">
+                <table class="table table-hover text-center">
+                    <thead class="text-uppercase">
+                        <tr>
+                            <th scope="col" style="padding-left: 60px;">ORDER Ref</th>
+                            <th style="padding-left: 60px;">Date</th>
+                            <th scope="col">Total Amount</th>
+                            <th scope="col">Order Status</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="custom_form_table_body">
+
+                    {% for order in all_order %}
+                        <tr>
+                            <th class="td_class">{{ order.order_no }}</th>
+                            <th class="td_class">{{ order.order_datetime }}</th>
+                            <th class="td_class">{{ order.total_amount }}</th>
+                            <th class="td_class">{{ order.order_status }}</th>
+                            <th class="td_class">
+                                <div class="row">
+                                    <div class="col col-md-2">
+                                        <a href="" class="text-secondary openDetailDialog" data-id="{{order.id}}" data-toggle="modal" data-target="#order_detail">
+                                         <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                    
+
+                                    {% if order.order_status == "Draft" %}
+
+                                     <div class="col col-md-2">
+                                        <a href="" class="text-danger openOrderDeleteDialog" data-id="{{order.id}}" data-toggle="modal" data-target="#order_deletepopup">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                    </div>
+
+                                    <div class="col col-md-3">
+                                        <a href="" class="text-secondary openCheckoutDialog" data-id="{{order.id}}" data-orderno="{{order.order_no}}"
+                                           data-orderdate="{{ order.order_datetime }}"
+                                           data-orderamount="{{ order.total_amount }}"
+                                           data-orderby = "{{ user.first_name }}"
+                                           data-toggle="modal" data-target="#order_checkout">
+                                         <button class="btn btn-primary">Checkout</button>
+                                        </a>
+                                    </div>
+                                    {% endif %}
+
+                                </div>
+
+                            </th>
+
+                         </tr>
+                    {% endfor %}
+
+
+                    <!--start popup-->
+                    <div class="modal fade" id="order_deletepopup">
+                        <div class="modal-dialog modal-dialog-centered"
+                             style="max-width: 423px!important;" role="document">
+                            <div class="modal-content mod-con">
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <div class="modal-header">
+                                        <div class="mod-footer">
+
+                                        </div>
+                                        <button type="button" class="close" data-dismiss="modal">
+                                            <span>&times;</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p style="text-align: center;">Are you sure you wish to
+                                            delete records and data will be <br> permanently
+                                            unavailable!</p>
+                                    </div>
+                                    <input type="hidden" name="order_id" id="delete_order_id"
+                                           value="" style="justify-content: center;"/>
+                                    <input type="hidden" name="source_call" id="delete_source_call"
+                                           value="delete" style="justify-content: center;"/>
+
+                                    <div class="modal-footer mod-footer">
+                                        <button type="button" id="delete_order_btn" class="btn btn-primary">Yes</button>
+                                        <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">No
+                                        </button>
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end popup-->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+<div class="modal fade" id="order_checkout" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true"  style="display: none;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+                <form action="{% url 'order_detail' %}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Order Checkout</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col col-md-2">
+                                <label for="checkout_order_ref"><b>Order Ref:</b></label>
+                            </div>
+                            <div class="col col-md-3">
+                                <span id="checkout_order_ref"></span>
+                            </div>
+                            <div class="col col-md-1">
+
+                            </div>
+                            <div class="col col-md-2">
+                                <label for="checkout_order_date"><b>Order Date:</b></label>
+                            </div>
+                            <div class="col col-md-4">
+                                <span id="checkout_order_date"></span>
+                            </div>
+
+                        </div>
+                        <p></p>
+                         <div class="row">
+                            <div class="col col-md-2">
+                                <label for="checkout_order_by"><b>Order By:</b></label>
+                            </div>
+                            <div class="col col-md-10">
+                                <span id="checkout_order_by"></span>
+                            </div>
+
+                        </div>
+                        <p></p>
+                        <div class="row">
+                            <div class="col col-md-2">
+                                <label for="checkout_total_amount"><b>Total Amount:</b></label>
+                            </div>
+                            <div class="col col-md-10">
+                                <span id="checkout_total_amount"></span>
+                            </div>
+
+                        </div>
+                        <p></p>
+                        <div class="row">
+                            <div class="col col-md-6">
+                                <label for="contact_no"><b>Contact No:</b><span style="color: red;">*</span></label>
+
+                                <input type="text" placeholder="Enter Contact No" name="contact_no" id="contact_no" required>
+                                <span style="color: red;" id="contact_error"></span>
+                            </div>
+                            <div class="col col-md-6">
+                                <label for="shipping_address"><b>Shipping Address</b><span style="color: red;">*</span></label>
+                                <input type="text" placeholder="Enter Shipping Address" name="shipping_address" id="shipping_address" required>
+                                <span style="color: red;" id="address_error"></span>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                         {% csrf_token %}
+
+                        <input type="hidden" name="checkout_order_id" id="checkout_order_id">
+                        <input type="hidden" name="source_call" id="checkout_source_call" value="order_checkout">
+
+                         <button type="button" id="checkout_btn" class="btn btn-primary">Checkout
+                                </button>
+
+
+                    </div>
+
+                </form>
+
+
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="order_detail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
+     aria-hidden="true"  style="display: none;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+                <form action="{% url 'index' %}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel2">Order Detail</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col col-md-2">
+                                <label for="order_ref"><b>Order Ref:</b></label>
+                            </div>
+                            <div class="col col-md-3">
+                                <span id="order_ref"></span>
+                            </div>
+                            <div class="col col-md-1">
+
+                            </div>
+                            <div class="col col-md-2">
+                                <label for="order_date"><b>Order Date:</b></label>
+                            </div>
+                            <div class="col col-md-4">
+                                <span id="order_date"></span>
+                            </div>
+
+                        </div>
+                         <div class="row">
+                            <div class="col col-md-2">
+                                <label for="order_by"><b>Order By:</b></label>
+                            </div>
+                            <div class="col col-md-10">
+                                <span id="order_by"></span>
+                            </div>
+
+                        </div>
+                        <p></p>
+                         <div class="row">
+                            <span id="order_items"></span>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                    </div>
+
+                </form>
+
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+         $('.openOrderDeleteDialog').click(function(){
+            var order_id = $(this).data('id');
+            console.log(order_id);
+            document.getElementById("delete_order_id").value = order_id;
+
+         });
+
+         $('.openCheckoutDialog').click(function(){
+            var order_id = $(this).data('id');
+            console.log($(this).data('orderno'));
+            document.getElementById("checkout_order_id").value = order_id;
+            $("#checkout_order_ref").text($(this).data('orderno'));
+            $("#checkout_order_date").text($(this).data('orderdate'));
+            $("#checkout_order_by").text($(this).data('orderby'));
+            $("#checkout_total_amount").text($(this).data('orderamount'));
+
+
+         });
+
+         $('.openDetailDialog').click(function(){
+                 var order_id = $(this).data('id');
+                 console.log(order_id);
+                  geturl = document.location.origin + "/order_detail/"
+                  $.ajax({
+                    url: geturl,
+                    type: 'get',
+                    data: {csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(), id: order_id },
+                    dataType: 'json',
+                    success: function(data){
+                        if(data.success == 1)
+                        {
+                            console.log(data.detail['order_ref']);
+                            $("#order_ref").text(data.detail['order_ref']);
+                            $("#order_date").text(data.detail['order_date']);
+                            $("#order_by").text(data.detail['order_by']);
+                            $("#order_items").html(data.detail['order_items']);
+
+
+
+                        }
+
+                        }
+                    }
+                  )
+
+             });
+
+         $(document).on("click", "#delete_order_btn", function () {
+
+
+              posturl = document.location.origin + "/order_detail/"
+              $.ajax({
+                url: posturl,
+                type: 'post',
+                data: {csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(), order_id: document.getElementById("delete_order_id").value, source_call: "delete" },
+                dataType: 'json',
+                success: function(data){
+                    if(data.success == 1)
+                    {
+
+                        window.location = "/?next=orders"
+
+                    }
+
+
+                    }
+                }
+              )
+
+
+
+        });
+
+         $(document).on("click", "#checkout_btn", function () {
+
+
+              posturl = document.location.origin + "/order_detail/"
+              $.ajax({
+                url: posturl,
+                type: 'post',
+                data: {csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                        order_id: document.getElementById("checkout_order_id").value,
+                        source_call: "order_checkout",
+                        contact_no: document.getElementById("contact_no").value,
+                        shipping_address: document.getElementById("shipping_address").value,
+                        },
+                dataType: 'json',
+                success: function(data){
+                    if(data.success == 1)
+                    {
+
+                        window.location = "/?next=orders"
+
+                    }
+                    else{
+                        $("#contact_error").text(data.contact_error_msg);
+                        $("#address_error").text(data.address_error_msg);
+                    }
+
+
+                    }
+                }
+              )
+
+
+
+        });
+
+
+</script>

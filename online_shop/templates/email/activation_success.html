@@ -1,0 +1,36 @@
+<html>
+   <head>
+       <style>
+
+        /* Set a style for the submit button */
+        .activatebtn {
+          background-color: #04AA6D;
+          color: white;
+          padding: 16px 20px;
+          margin: 20px 0;
+          border: none;
+          cursor: pointer;
+          width: 20%;
+          opacity: 0.9;
+        }
+
+        .activatebtn:hover {
+          opacity: 1;
+        }
+       </style>
+   </head>
+   <body>
+   <center>
+       <p>
+         Activation complete. You can login now. Thanks.
+         <br>
+         <a href="{% url 'login_view' %}">
+             <button type="submit" class="activatebtn">Login</button>
+         </a>
+
+     </p>
+   </center>
+
+
+   </body>
+</html>

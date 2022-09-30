@@ -1,0 +1,42 @@
+<html>
+   <head>
+       <style>
+
+        /* Set a style for the submit button */
+        .activatebtn {
+          background-color: #04AA6D;
+          color: white;
+          padding: 16px 20px;
+          margin: 20px 0;
+          border: none;
+          cursor: pointer;
+          width: 20%;
+          opacity: 0.9;
+        }
+
+        .activatebtn:hover {
+          opacity: 1;
+        }
+       </style>
+   </head>
+   <body>
+     <p>
+         Dear {{ user_obj.first_name }}, <br/>
+         Thanks for joining. Please click on the activate button to complete Registration Process.
+         <br>
+         <a href="{{ link }}">
+             <button type="submit" class="activatebtn">Activate</button>
+         </a>
+
+         <br/>
+         If you cannot click on Activate button, you can activate from this {{ link }}. <br/>
+
+         <br/>
+
+     </p>
+     Your Sincerely,
+     <div>
+         Punchi Inc Admin Team
+     </div>
+   </body>
+</html>

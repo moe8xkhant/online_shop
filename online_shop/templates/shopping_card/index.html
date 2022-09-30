@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard_style.css' %}">
+    <!-- Font Awesome Cdn Link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"/>
+
+</head>
+<body id="main_body">
+<header class="header">
+    <div class="logo">
+        <a href="#">Pinchi Inc Online Shop</a>
+    </div>
+
+    <div class="header-icons">
+        {% if user.is_authenticated %}
+            <a href="" class="text-secondary openUserDetailDialog" data-id="{{user.id}}" data-toggle="modal" data-target="#user_detail">
+                <i class="fa fa-user" aria-hidden="true"></i>
+            </a>
+        {% else %}
+            <i class="fa fa-user" aria-hidden="true"></i>
+        {% endif %}
+
+        <div class="account">
+
+            {% if user.is_authenticated %}
+            {% if user.first_name %}
+            <h4>{{ user.first_name }} </h4>
+            {% else %}
+            <h4>{{ user.username }}</h4>
+            {% endif %}
+            <a style="padding-left: 10px;" href="{% url 'logout' %}">Log Out</a>
+            {% else %}
+            <a style="padding-left: 10px;" href="{% url 'login_view' %}">Log In</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+<div class="container" id="main_con">
+    {% if user.is_authenticated %}
+    <nav>
+        <div class="side_navbar" id="menu_item">
+            {% if user.is_staff and assigned_department %}
+            <span>Settings</span>
+            {% if next == 'orders' %}
+                <a id="product_list_box">Product Configuration</a>
+            {% else %}
+                <a id="product_list_box" class="active">Product Configuration</a>
+            {% endif %}
+
+            {% endif %}
+
+
+            <span>Main Menu</span>
+            {% if user.is_staff and assigned_department %}
+                <a id="product_box">Products</a>
+            {% else %}
+                {% if next == 'orders' %}
+                    <a id="product_box">Products</a>
+                {% else %}
+                    <a id="product_box" class="active">Products</a>
+                {% endif %}
+
+            {% endif %}
+
+            {% if next == 'orders' %}
+                <a id="order_box" class="active">Orders</a>
+            {% else %}
+                <a id="order_box">Orders</a>
+            {% endif %}
+
+
+
+
+        </div>
+    </nav>
+    {% endif %}
+
+     {% if user.is_staff and assigned_department %}
+        {% if next == 'orders' %}
+            {% include 'order/order_list.html' %}
+            {% include 'product/product_list.html' %}
+            {% include 'shopping_card/shopping_card.html' %}
+
+        {% else %}
+            {% include 'product/product_list.html' %}
+            {% include 'shopping_card/shopping_card.html' %}
+            {% include 'order/order_list.html' %}
+
+        {% endif %}
+
+     {% else %}
+        {% if next == 'orders' %}
+            {% include 'order/order_list.html' %}
+            {% include 'shopping_card/shopping_card.html' %}
+            {% include 'product/product_list.html' %}
+
+
+        {% else %}
+            {% include 'shopping_card/shopping_card.html' %}
+            {% include 'product/product_list.html' %}
+            {% include 'order/order_list.html' %}
+
+        {% endif %}
+
+
+
+     {% endif %}
+
+</div>
+
+<div class="modal fade" id="user_detail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3"
+     aria-hidden="true"  style="display: none;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+                <form action="{% url 'index' %}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel2">My Profile</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                         <div class="row">
+                            <div class="col col-md-2">
+                                <label for="name"><b>First Name:</b></label>
+                            </div>
+                            <div class="col col-md-3">
+                                <span id="first_name"></span>
+                            </div>
+                            <div class="col col-md-1">
+
+                            </div>
+                            <div class="col col-md-2">
+                                <label for="name"><b>Last Name:</b></label>
+                            </div>
+                            <div class="col col-md-4">
+                                <span id="last_name"></span>
+                            </div>
+
+                        </div>
+                        <p></p>
+                        <div class="row">
+                            <div class="col col-md-2">
+                                <label for="name"><b>Username:</b></label>
+                            </div>
+                            <div class="col col-md-3">
+                                <span id="username"></span>
+                            </div>
+                            <div class="col col-md-1">
+
+                            </div>
+                            <div class="col col-md-2">
+                                <label for="name"><b>Email:</b></label>
+                            </div>
+                            <div class="col col-md-4">
+                                <span id="email"></span>
+                            </div>
+
+                        </div>
+                        <p></p>
+                        <div class="row">
+                            <div class="col col-md-2">
+                                <label for="name"><b>Phone Number:</b></label>
+                            </div>
+                            <div class="col col-md-3">
+                                <span id="phone_no"></span>
+                            </div>
+                            <div class="col col-md-1">
+
+                            </div>
+                            <div class="col col-md-2">
+                                <label for="name"><b>Category:</b></label>
+                            </div>
+                            <div class="col col-md-4">
+                                <span id="customer_cat"></span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                    </div>
+
+                </form>
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<script src="./static/js/library/jquery.min.js"></script>
+<script src="./static/js/library/bootstrap.min.js"></script>
+<script src="./static/js/shopping_card.js"></script>
+
+<script>
+    	$('#menu_item :first-child a').addClass('active');
+        $('#menu_item a:not(:first)').addClass('inactive');
+        $('.main-body').hide();
+        $('.main-body:first').show();
+
+        $('#menu_item a').click(function(){
+            var t = $(this).attr('id');
+
+            if(!$(this).hasClass('active')){
+
+              $('#menu_item a').removeClass('active').addClass('inactive');
+              $(this).removeClass('inactive').addClass('active');
+
+              $('.main-body').hide();
+              $('#'+ t + '_con').fadeIn('slow');
+         }
+        });
+
+        $('.openUserDetailDialog').click(function(){
+             var user_id = $(this).data('id');
+             console.log(user_id);
+              geturl = document.location.origin + "/user_detail/"
+              $.ajax({
+                url: geturl,
+                type: 'get',
+                data: {csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+                dataType: 'json',
+                success: function(data){
+                    if(data.success == 1)
+                    {
+
+                        $("#customer_cat").text(data.detail['customer_cat']);
+                        $("#username").text(data.detail['username']);
+                        $("#email").text(data.detail['email']);
+                        $("#phone_no").html(data.detail['phone_no']);
+                        $("#first_name").text(data.detail['first_name']);
+                        $("#last_name").html(data.detail['last_name']);
+
+
+
+                    }
+
+                    }
+                }
+              )
+
+         });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: grey;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Add padding to containers */
+.container {
+  padding: 16px;
+  background-color: white;
+  width: 50%;
+
+}
+
+/* Full-width input fields */
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Overwrite default styles of hr */
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+/* Set a style for the submit button */
+.registerbtn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+
+.registerbtn:hover {
+  opacity: 1;
+}
+
+/* Add a blue text color to links */
+a {
+  color: dodgerblue;
+}
+
+/* Set a grey background color and center the text of the "sign in" section */
+.signin {
+  background-color: #f1f1f1;
+  text-align: center;
+}
+
+.errorlist {
+    background: red;
+}
+
+.success_msg {
+    color: white;
+    background: green;
+    height: 30px;
+    padding: 5px;
+}
+
+
+
+    </style>
+</head>
+<body>
+
+<form action="{% url 'customer_signup_form' %}" method="POST">
+    <div class="row">
+        <div class="col col-md-1">
+
+        </div>
+        <div class="col col-md-10">
+            <div class="container">
+                <h1>Register</h1>
+                <p>Please fill in this form to create an account. ( <span style="color: red;">*</span> are mandatory fields. )</p>
+                {% if form.errors %}
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            <strong>{{ error|escape }}</strong>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                {% if success_msg %}
+                <p>
+                    <p class="success_msg">  {{ success_msg }}</p>
+                </p>
+                {% endif %}
+                <hr>
+
+                <div class="row">
+                    <div class="col col-md-6">
+                        <label for="first_name"><b>First Name</b><span style="color: red;">*</span></label>
+
+                        <input type="text" placeholder="Enter First Name" name="first_name" id="first_name" value="{{ first_name }}" required>
+                    </div>
+                    <div class="col col-md-6">
+                        <label for="last_name"><b>Last Name</b></label>
+                        <input type="text" placeholder="Enter Last Name" name="last_name" id="last_name" value="{{ last_name }}">
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col col-md-6">
+                        <label for="email"><b>Email</b><span style="color: red;">*</span></label>
+
+                        <input type="text" placeholder="Enter Email" name="email" id="email" required value="{{ email }}">
+                    </div>
+                    <div class="col col-md-6">
+                        <label for="phone_no"><b>Phone Number</b></label>
+                        <input type="text" placeholder="Enter Phone Number" name="phone_no" id="phone_no" value="{{ phone_no }}">
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col col-md-6">
+                        <label for="psw"><b>Password</b><span style="color: red;">*</span></label>
+                        <input type="password" placeholder="Enter Password" name="password" id="psw" required>
+                    </div>
+                    <div class="col col-md-6">
+                        <label for="psw-repeat"><b>Repeat Password</b><span style="color: red;">*</span></label>
+                        <input type="password" placeholder="Repeat Password" name="password_repeat" id="psw-repeat" required>
+                    </div>
+
+                </div>
+
+                <hr>
+                {% csrf_token %}
+                <p>By creating an account you agree to our Terms & Privacy.</p>
+
+                <button type="submit" class="registerbtn">Register</button>
+            </div>
+
+            <div class="container signin">
+                <p>Already have an account? <a href="{% url 'login_view' %}">Sign in</a>.</p>
+            </div>
+        </div>
+        <div class="col col-md-1">
+
+        </div>
+    </div>
+
+
+</form>
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
+</head>
+<body style="background: aliceblue;">
+    <div class="container">
+        <div class="row" style="justify-content: center; display: flex;">
+            <form action="{% url 'login' %}" method="post">
+                <div style="padding-top: 50px; font-size: 50px; color: black;">
+                    <center>Welcome To HR Form System</center>
+                </div>
+                <p>
+                    <p style="color: red;"> {{ error_msg }} </p>
+                </p>
+                <p>
+
+                     <div class="login-form-body">
+                         <div class="form-row">
+                             <div class="form-group col-md-12 validate-input"
+                                 data-validate="Email is required">
+                                <label for="example-date-input" class="col-form-label">Email</label>
+                                <input type="text" class="form-control" id="username"
+                                       name="username" placeholder="">
+                             </div>
+                             <div class="form-group col-md-12">
+                                <label for="example-date-input"
+                                       class="col-form-label">Password</label>
+                                <input type="password" class="form-control" id="password"
+                                       name="password" placeholder="">
+                                <div class="text-danger"></div>
+                             </div>
+                         </div>
+
+                        {% csrf_token %}
+                         <input type="hidden" name="next" value="{{ next }}"/>
+
+                         <div class="submit-btn-area"
+                             style="padding-top: 20px; padding-bottom: 20px;">
+                             <button id="form_submit1" type="submit">Sign In</button>
+
+
+                         </div>
+
+
+                    </div>
+
+                </p>
+
+
+            </form>
+
+        </div>
+    </div>
+
+
+
+</body>
+</html>
